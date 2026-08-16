@@ -10,15 +10,32 @@
   <title>QuantRank500</title>
   <style>
     :root {
-      --ink: #202124; --gray: #5f6368; --gray-light: #9aa0a6;
+      --bg: #ffffff; --ink: #202124; --gray: #5f6368; --gray-light: #9aa0a6;
       --line: #dadce0; --paper: #f8f9fa;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #202124; --ink: #e8eaed; --gray: #9aa0a6; --gray-light: #80868b;
+        --line: #3c4043; --paper: #2a2b2e;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #202124; --ink: #e8eaed; --gray: #9aa0a6; --gray-light: #80868b;
+      --line: #3c4043; --paper: #2a2b2e;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      color: var(--ink); background: #fff; line-height: 1.55;
+      color: var(--ink); background: var(--bg); line-height: 1.55;
     }
+    .theme-toggle {
+      position: fixed; top: 8px; right: 8px;
+      padding: 2px 9px; font-size: 0.85rem; line-height: 1.4;
+      background: var(--paper); color: var(--gray);
+      border: 1px solid var(--gray); border-radius: 4px; cursor: pointer;
+    }
+    .theme-toggle:hover { color: var(--ink); }
     main { max-width: 640px; margin: 0 auto; padding: 48px 16px 64px; }
     h1 { font-size: 1.8rem; font-weight: 600; margin: 0 0 4px; }
     .est { color: var(--gray-light); font-size: 0.75rem; letter-spacing: 0.06em;
@@ -102,5 +119,22 @@
   <a href="https://github.com/quantrank500">GitHub</a> ·
   MIT licensed · Free and open-source — no ads, no data sales, no revenue.
 </footer>
+
+<script>
+  const saved = localStorage.getItem("qr500_theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+  const toggle = document.createElement("button");
+  toggle.className = "theme-toggle";
+  toggle.textContent = "◐";
+  toggle.title = "Toggle light / dark";
+  toggle.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme
+      || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("qr500_theme", next);
+  });
+  document.body.appendChild(toggle);
+</script>
 </body>
 </html>
